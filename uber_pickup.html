@@ -1,0 +1,147 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uber Pickup</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Roboto', sans-serif;
+            background-color: #f6f7f9;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            padding: 20px;
+        }
+        .header {
+            background-color: white;
+            padding: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+        input, button {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        .order-screen {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .verify-button {
+            background-color: black;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        .swipe-area {
+            margin-top: 20px;
+            background-color: #eee;
+            padding: 15px;
+            border-radius: 50px;
+            text-align: center;
+            color: #555;
+            user-select: none;
+        }
+        #pickup-status {
+            margin-top: 15px;
+            font-weight: bold;
+            color: green;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">You've arrived</div>
+
+    <div class="container">
+        <div>
+            <h3>Enter Order Details</h3>
+            <input type="text" id="restaurantName" placeholder="Restaurant Name" />
+            <input type="text" id="restaurantAddress" placeholder="Restaurant Address" />
+            <input type="text" id="customerName" placeholder="Customer Name" />
+            <input type="text" id="orderId" placeholder="Order ID" />
+            <input type="text" id="items" placeholder="Number of Items" />
+            <input type="text" id="time" placeholder="Anticipated Time (e.g. 9:21 PM)" />
+            <button class="verify-button" onclick="updateOrder()">Save and Display</button>
+        </div>
+
+        <div class="order-screen">
+            <h2 id="displayRestaurant">Restaurant Name</h2>
+            <p id="displayAddress">Restaurant Address</p>
+            <h3>Pick up 1 order</h3>
+            <p id="displayCustomer">Customer Name</p>
+            <p id="displayOrderId">Order ID - Items</p>
+            <p id="displayTime">Anticipated Time</p>
+            <button class="verify-button" onclick="verifyOrder()">Verify this order</button>
+            <p id="verificationStatus"></p>
+            <div class="swipe-area" id="swipeArea">Slide right to confirm pickup ➡️</div>
+            <p id="pickup-status"></p>
+        </div>
+
+        <button class="verify-button" onclick="resetForm()">Reset</button>
+    </div>
+
+    <script>
+        function updateOrder() {
+            document.getElementById('displayRestaurant').innerText = document.getElementById('restaurantName').value;
+            document.getElementById('displayAddress').innerText = document.getElementById('restaurantAddress').value;
+            document.getElementById('displayCustomer').innerText = document.getElementById('customerName').value;
+            document.getElementById('displayOrderId').innerText = document.getElementById('orderId').value + ' - ' + document.getElementById('items').value + ' items';
+            document.getElementById('displayTime').innerText = 'Anticipated by: ' + document.getElementById('time').value;
+
+            document.getElementById('verificationStatus').innerText = '';
+            document.getElementById('pickup-status').innerText = '';
+        }
+
+        function verifyOrder() {
+            document.getElementById('verificationStatus').innerText = 'Order Verified ✅';
+        }
+
+        function resetForm() {
+            document.getElementById('restaurantName').value = '';
+            document.getElementById('restaurantAddress').value = '';
+            document.getElementById('customerName').value = '';
+            document.getElementById('orderId').value = '';
+            document.getElementById('items').value = '';
+            document.getElementById('time').value = '';
+
+            document.getElementById('displayRestaurant').innerText = 'Restaurant Name';
+            document.getElementById('displayAddress').innerText = 'Restaurant Address';
+            document.getElementById('displayCustomer').innerText = 'Customer Name';
+            document.getElementById('displayOrderId').innerText = 'Order ID - Items';
+            document.getElementById('displayTime').innerText = 'Anticipated Time';
+            document.getElementById('verificationStatus').innerText = '';
+            document.getElementById('pickup-status').innerText = '';
+        }
+
+        let startX = 0;
+        document.getElementById('swipeArea').addEventListener('touchstart', function(e) {
+            startX = e.touches[0].clientX;
+        });
+
+        document.getElementById('swipeArea').addEventListener('touchend', function(e) {
+            let endX = e.changedTouches[0].clientX;
+            if (endX - startX > 100) {
+                document.getElementById('pickup-status').innerText = 'Pickup Confirmed ✅';
+            }
+        });
+    </script>
+
+</body>
+</html>
